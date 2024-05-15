@@ -28,7 +28,7 @@ public class Ticket {
 	 */
 	public void avanzarTurno() throws TicketException {
 		if (turno <= ticket) {
-			throw new TicketException("Ticket anterior o actualmente en uso");
+			throw new TicketException("** Ticket anterior o actualmente en uso **");
 		}
 		turno++;
 	}
@@ -37,12 +37,17 @@ public class Ticket {
 	 * Incremento en uno la numeración del ticket.
 	 * 
 	 * @return ticket correspondiente
+	 * @throws TicketException si el ticket está fuera de rango
 	 */
-	public int tirarTicket() {
+	public int tirarTicket() throws TicketException {
+		if (ticket > 99 || ticket < 0) {
+			throw new TicketException("** Número de ticket inválido **");
+		}
 		if (ticket == 99) {
 			ticket = 0;
+		} else {
+			ticket++;
 		}
-		ticket++;
 		return ticket;
 	}
 
