@@ -18,6 +18,8 @@ public class Ticket {
 	/** Inicializa y asigna el nombre al elemento. */
 	public Ticket(String nombre) {
 		this.nombre = nombre;
+		turno = 0;
+		ticket = 0;
 	}
 
 	/**
@@ -27,8 +29,8 @@ public class Ticket {
 	 * @throws TicketException si el dato no es válido
 	 */
 	public void avanzarTurno() throws TicketException {
-		if (turno <= ticket) {
-			throw new TicketException("** Ticket anterior o actualmente en uso **");
+		if (turno >= ticket) {
+			throw new TicketException("¡No hay tickets activos!");
 		}
 		turno++;
 	}
@@ -40,7 +42,7 @@ public class Ticket {
 	 * @throws TicketException si el ticket está fuera de rango
 	 */
 	public int tirarTicket() throws TicketException {
-		if (ticket > 99 || ticket <= 0) {
+		if (ticket > 99 || ticket < 0) {
 			throw new TicketException("** Número de ticket inválido **");
 		}
 		if (ticket == 99) {
@@ -59,13 +61,41 @@ public class Ticket {
 	public int getTurno() {
 		return turno;
 	}
-
+	
+	/**
+	 * Consulta el ticket actual.
+	 * 
+	 * @return el turno correspondiente
+	 */
+	public int getTicket() {
+		return ticket;
+	}
+	
 	/**
 	 * Reinica tanto la numeración del ticket como el número de contador a cero.
 	 */
 	public void restablecer() {
 		ticket = 0;
 		turno = 0;
+	}
+	
+	/**
+	 * Crea un texto con los tres elementos del ticket.<div>
+	 * 
+	 * <pre>
+	 * Pescados Delgado | Ticket: 12 | Turno: 2
+	 * </pre>
+	 * 
+	 * </div>
+	 * 
+	 * @return texto correspondiente
+	 */
+	@Override
+	public String toString() {
+		String texto;
+		texto = String.format("(%s,Ticket: %d, Turno: %d%n)", nombre, turno, ticket);
+		return texto;
+
 	}
 	
 }
