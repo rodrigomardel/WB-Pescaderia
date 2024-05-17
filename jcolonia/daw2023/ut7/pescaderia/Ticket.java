@@ -34,13 +34,13 @@ public class Ticket {
 	}
 
 	/**
-	 * Incremento en uno la numeración del ticket.
+	 * Incrementa en uno la numeración del ticket.
 	 * 
 	 * @return ticket correspondiente
 	 * @throws TicketException si el ticket está fuera de rango
 	 */
 	public int tirarTicket() throws TicketException {
-		if (ticket > 99 || ticket < 0) {
+		if (ticket > 99 || ticket <= 0) {
 			throw new TicketException("** Número de ticket inválido **");
 		}
 		if (ticket == 99) {
@@ -61,11 +61,11 @@ public class Ticket {
 	}
 
 	/**
-	 * Reinica el tanto la numeración del ticket como el número de contador a cero.
+	 * Reinica tanto la numeración del ticket como el número de contador a cero.
 	 */
 	public void restablecer() {
 		ticket = 0;
 		turno = 0;
-
 	}
+	
 }
