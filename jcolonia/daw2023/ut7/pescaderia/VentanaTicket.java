@@ -24,6 +24,10 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import java.awt.CardLayout;
+import javax.swing.JMenuBar;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import javax.swing.JTextField;
 
 public class VentanaTicket extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -37,10 +41,12 @@ public class VentanaTicket extends JFrame {
 	private JButton jbotonSacarTicket;
 	private JPanel jpanelBorde;
 	private JPanel jpanelBordeTurno;
-	private JTextPane jtextTurno;
+	private JTextField jtextTurno;
 	private JPanel jpanelInformación;
 	private JTextPane jtextInformación;
 	private JLabel júltimoTicket;
+	private JMenuBar menuBar;
+	private JButton jbotonRestablecer;
 
 	/**
 	 * Launch the application.
@@ -73,7 +79,8 @@ public class VentanaTicket extends JFrame {
 	private void initialize() {
 		setTitle("Ventana-Ticket");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 477, 204);
+		setBounds(100, 100, 497, 293);
+		setJMenuBar(getMenuBar_1());
 		jcontentPanel = new JPanel();
 		jcontentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -130,7 +137,8 @@ public class VentanaTicket extends JFrame {
 					try {
 						ticket.tirarTicket();
 						int ticketActual = ticket.getTicket();
-						júltimoTicket.setText(String.valueOf(ticketActual));
+						String texto = String.format("Siguiente: %d", ticketActual);
+						júltimoTicket.setText(texto);
 					} catch (TicketException e1) {
 						JOptionPane.showMessageDialog(getVentana(), e1.getLocalizedMessage());
 						e1.printStackTrace();
@@ -148,9 +156,8 @@ public class VentanaTicket extends JFrame {
 			jpanelBorde.setBorder(new TitledBorder(
 					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 					"Pescados Delgado", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			jpanelBorde.setLayout(new GridLayout(0, 2, 0, 0));
+			jpanelBorde.setLayout(new BorderLayout(0, 0));
 			jpanelBorde.add(getJpanelBordeTurno());
-			jpanelBorde.add(getJúltimoTicket());
 		}
 		return jpanelBorde;
 	}
@@ -161,16 +168,19 @@ public class VentanaTicket extends JFrame {
 			jpanelBordeTurno.setBorder(new TitledBorder(
 					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 					"Turno Actual", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			jpanelBordeTurno.setLayout(new GridLayout(0, 1, 0, 0));
-			jpanelBordeTurno.add(getJtextTurno());
+			jpanelBordeTurno.setLayout(new BorderLayout(10, 0));
+			jpanelBordeTurno.add(getJtextTurno(), BorderLayout.CENTER);
+			jpanelBordeTurno.add(getJúltimoTicket_1(), BorderLayout.SOUTH);
 		}
 		return jpanelBordeTurno;
 	}
 
-	private JTextPane getJtextTurno() {
+	private JTextField getJtextTurno() {
 		if (jtextTurno == null) {
-			jtextTurno = new JTextPane();
-			jtextTurno.setEnabled(false);
+			jtextTurno = new JTextField();
+			jtextTurno.setHorizontalAlignment(SwingConstants.CENTER);
+			jtextTurno.setBorder(new EmptyBorder(10, 10, 10, 10));
+			jtextTurno.setFont(new Font("Tahoma", Font.PLAIN, 60));
 			jtextTurno.setEditable(false);
 		}
 		return jtextTurno;
@@ -179,8 +189,9 @@ public class VentanaTicket extends JFrame {
 	private JPanel getJpanelInformación() {
 		if (jpanelInformación == null) {
 			jpanelInformación = new JPanel();
-			jpanelInformación.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Autor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			jpanelInformación.setBorder(new TitledBorder(
+					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Autor",
+					TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			jpanelInformación.setLayout(new BorderLayout(0, 0));
 			jpanelInformación.add(getJtextInformación(), BorderLayout.CENTER);
 		}
@@ -198,13 +209,39 @@ public class VentanaTicket extends JFrame {
 		}
 		return jtextInformación;
 	}
-	private JLabel getJúltimoTicket() {
+
+	private JLabel getJúltimoTicket_1() {
 		if (júltimoTicket == null) {
-			júltimoTicket = new JLabel("Último Ticket:");
-			júltimoTicket.setHorizontalAlignment(SwingConstants.LEFT);
-			júltimoTicket.setToolTipText("");
+			júltimoTicket = new JLabel("Número de Ticket");
+			júltimoTicket.setBounds(new Rectangle(0, 0, 10, 10));
 			júltimoTicket.setVerticalAlignment(SwingConstants.BOTTOM);
+			júltimoTicket.setToolTipText("");
+			júltimoTicket.setHorizontalAlignment(SwingConstants.LEFT);
 		}
 		return júltimoTicket;
+	}
+
+	private JMenuBar getMenuBar_1() {
+		if (menuBar == null) {
+			menuBar = new JMenuBar();
+			menuBar.setMargin(new Insets(10, 10, 10, 10));
+			menuBar.add(getJbotonRestablecer());
+		}
+		return menuBar;
+	}
+
+	private JButton getJbotonRestablecer() {
+		if (jbotonRestablecer == null) {
+			jbotonRestablecer = new JButton("Restablecer");
+			jbotonRestablecer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ticket.restablecer();
+					jtextTurno.setText("Pulse «Avanzar Turno»");
+					júltimoTicket.setText("Número de Ticket");
+				}
+			});
+			jbotonRestablecer.setVerticalAlignment(SwingConstants.TOP);
+		}
+		return jbotonRestablecer;
 	}
 }
