@@ -3,6 +3,7 @@ package jcolonia.daw2023.ut7.pescaderia;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
@@ -17,10 +18,18 @@ import java.awt.Color;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.BoxLayout;
+import java.awt.CardLayout;
 
 public class VentanaTicket extends JFrame {
-
 	private static final long serialVersionUID = 1L;
+
+	private Ticket ticket;
+
 	private JPanel jcontentPanel;
 	private JPanel jpanelExterior;
 	private JPanel jpanelBotones;
@@ -28,9 +37,10 @@ public class VentanaTicket extends JFrame {
 	private JButton jbotonSacarTicket;
 	private JPanel jpanelBorde;
 	private JPanel jpanelBordeTurno;
-	private JPanel jpanelBordeTicket;
 	private JTextPane jtextTurno;
-	private JTextPane jtextTicket;
+	private JPanel jpanelInformación;
+	private JTextPane jtextInformación;
+	private JLabel júltimoTicket;
 
 	/**
 	 * Launch the application.
@@ -48,14 +58,20 @@ public class VentanaTicket extends JFrame {
 		});
 	}
 
+	private JFrame getVentana() {
+		return this;
+	}
+
 	/**
 	 * Create the frame.
 	 */
 	public VentanaTicket() {
 		initialize();
+		ticket = new Ticket("Pescados Delgado");
 	}
 
 	private void initialize() {
+		setTitle("Ventana-Ticket");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 477, 204);
 		jcontentPanel = new JPanel();
@@ -64,6 +80,7 @@ public class VentanaTicket extends JFrame {
 		setContentPane(jcontentPanel);
 		jcontentPanel.setLayout(new BorderLayout(0, 0));
 		jcontentPanel.add(getJpanelExterior());
+		jcontentPanel.add(getJpanelInformación(), BorderLayout.SOUTH);
 	}
 
 	private JPanel getJpanelExterior() {
@@ -72,7 +89,7 @@ public class VentanaTicket extends JFrame {
 			jpanelExterior.setBorder(new EmptyBorder(10, 10, 10, 10));
 			jpanelExterior.setLayout(new BorderLayout(0, 0));
 			jpanelExterior.add(getJpanelBotones(), BorderLayout.SOUTH);
-			jpanelExterior.add(getJpanelBorde(), BorderLayout.NORTH);
+			jpanelExterior.add(getJpanelBorde(), BorderLayout.CENTER);
 		}
 		return jpanelExterior;
 	}
@@ -82,7 +99,7 @@ public class VentanaTicket extends JFrame {
 			jpanelBotones = new JPanel();
 			jpanelBotones.setLayout(new GridLayout(1, 0, 10, 0));
 			jpanelBotones.add(getJbotonAvanzarTurno_1());
-			jpanelBotones.add(getJbotonAvanzarTurno_1_1());
+			jpanelBotones.add(getJbotonSacarTicket());
 		}
 		return jpanelBotones;
 	}
@@ -90,13 +107,37 @@ public class VentanaTicket extends JFrame {
 	private JButton getJbotonAvanzarTurno_1() {
 		if (jbotonAvanzarTurno == null) {
 			jbotonAvanzarTurno = new JButton("Avanzar Turno");
+			jbotonAvanzarTurno.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						ticket.avanzarTurno();
+						int turnoActual = ticket.getTurno();
+						jtextTurno.setText(String.valueOf(turnoActual));
+					} catch (TicketException e1) {
+						JOptionPane.showMessageDialog(getVentana(), e1.getLocalizedMessage());
+					}
+				}
+			});
 		}
 		return jbotonAvanzarTurno;
 	}
 
-	private JButton getJbotonAvanzarTurno_1_1() {
+	private JButton getJbotonSacarTicket() {
 		if (jbotonSacarTicket == null) {
 			jbotonSacarTicket = new JButton("Sacar Ticket");
+			jbotonSacarTicket.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						ticket.tirarTicket();
+						int ticketActual = ticket.getTicket();
+						júltimoTicket.setText(String.valueOf(ticketActual));
+					} catch (TicketException e1) {
+						JOptionPane.showMessageDialog(getVentana(), e1.getLocalizedMessage());
+						e1.printStackTrace();
+					}
+
+				}
+			});
 		}
 		return jbotonSacarTicket;
 	}
@@ -106,31 +147,26 @@ public class VentanaTicket extends JFrame {
 			jpanelBorde = new JPanel();
 			jpanelBorde.setBorder(new TitledBorder(
 					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-					"Pescader\u00EDa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+					"Pescados Delgado", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			jpanelBorde.setLayout(new GridLayout(0, 2, 0, 0));
 			jpanelBorde.add(getJpanelBordeTurno());
-			jpanelBorde.add(getJpanelBordeTicket());
+			jpanelBorde.add(getJúltimoTicket());
 		}
 		return jpanelBorde;
 	}
+
 	private JPanel getJpanelBordeTurno() {
 		if (jpanelBordeTurno == null) {
 			jpanelBordeTurno = new JPanel();
-			jpanelBordeTurno.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Turno", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			jpanelBordeTurno.setLayout(new BorderLayout(0, 0));
-			jpanelBordeTurno.add(getJtextTurno(), BorderLayout.NORTH);
+			jpanelBordeTurno.setBorder(new TitledBorder(
+					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+					"Turno Actual", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			jpanelBordeTurno.setLayout(new GridLayout(0, 1, 0, 0));
+			jpanelBordeTurno.add(getJtextTurno());
 		}
 		return jpanelBordeTurno;
 	}
-	private JPanel getJpanelBordeTicket() {
-		if (jpanelBordeTicket == null) {
-			jpanelBordeTicket = new JPanel();
-			jpanelBordeTicket.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Ticket", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			jpanelBordeTicket.setLayout(new BorderLayout(0, 0));
-			jpanelBordeTicket.add(getJtextTicket(), BorderLayout.NORTH);
-		}
-		return jpanelBordeTicket;
-	}
+
 	private JTextPane getJtextTurno() {
 		if (jtextTurno == null) {
 			jtextTurno = new JTextPane();
@@ -139,12 +175,36 @@ public class VentanaTicket extends JFrame {
 		}
 		return jtextTurno;
 	}
-	private JTextPane getJtextTicket() {
-		if (jtextTicket == null) {
-			jtextTicket = new JTextPane();
-			jtextTicket.setEnabled(false);
-			jtextTicket.setEditable(false);
+
+	private JPanel getJpanelInformación() {
+		if (jpanelInformación == null) {
+			jpanelInformación = new JPanel();
+			jpanelInformación.setBorder(
+					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Autor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+			jpanelInformación.setLayout(new BorderLayout(0, 0));
+			jpanelInformación.add(getJtextInformación(), BorderLayout.CENTER);
 		}
-		return jtextTicket;
+		return jpanelInformación;
+	}
+
+	private JTextPane getJtextInformación() {
+		if (jtextInformación == null) {
+			jtextInformación = new JTextPane();
+			jtextInformación.setText("Rodrigo Martínez Delgado - IC09");
+			jtextInformación.setForeground(new Color(51, 102, 255));
+			jtextInformación.setFont(new Font("Tahoma", Font.BOLD, 12));
+			jtextInformación.setEditable(false);
+			jtextInformación.setBorder(new EmptyBorder(0, 0, 0, 0));
+		}
+		return jtextInformación;
+	}
+	private JLabel getJúltimoTicket() {
+		if (júltimoTicket == null) {
+			júltimoTicket = new JLabel("Último Ticket:");
+			júltimoTicket.setHorizontalAlignment(SwingConstants.LEFT);
+			júltimoTicket.setToolTipText("");
+			júltimoTicket.setVerticalAlignment(SwingConstants.BOTTOM);
+		}
+		return júltimoTicket;
 	}
 }
