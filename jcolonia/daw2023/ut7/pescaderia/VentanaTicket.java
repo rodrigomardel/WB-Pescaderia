@@ -7,6 +7,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
+
+import static java.lang.System.out;
+
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -47,6 +50,7 @@ public class VentanaTicket extends JFrame {
 	private JLabel júltimoTicket;
 	private JMenuBar menuBar;
 	private JButton jbotonRestablecer;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -190,23 +194,25 @@ public class VentanaTicket extends JFrame {
 		if (jpanelInformación == null) {
 			jpanelInformación = new JPanel();
 			jpanelInformación.setBorder(new TitledBorder(
-					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Autor",
-					TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+					"Información", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			jpanelInformación.setLayout(new BorderLayout(0, 0));
-			jpanelInformación.add(getJtextInformación(), BorderLayout.CENTER);
+			jpanelInformación.add(getJtextInformación(), BorderLayout.WEST);
+			jpanelInformación.add(getTextField(), BorderLayout.CENTER);
 		}
 		return jpanelInformación;
 	}
 
 	private JTextPane getJtextInformación() {
 		if (jtextInformación == null) {
+
 			jtextInformación = new JTextPane();
-			jtextInformación.setText("Rodrigo Martínez Delgado - IC09");
+			jtextInformación.setText("");
 			jtextInformación.setForeground(new Color(51, 102, 255));
 			jtextInformación.setFont(new Font("Tahoma", Font.BOLD, 12));
 			jtextInformación.setEditable(false);
 			jtextInformación.setBorder(new EmptyBorder(0, 0, 0, 0));
-		}
+
 		return jtextInformación;
 	}
 
@@ -243,5 +249,35 @@ public class VentanaTicket extends JFrame {
 			jbotonRestablecer.setVerticalAlignment(SwingConstants.TOP);
 		}
 		return jbotonRestablecer;
+	}
+
+	/**
+	 * Envía directamente a la salida un texto sin ningún añadifo más que el salto
+	 * de línea final.
+	 * 
+	 * @param texto el texto deseado
+	 */
+	public static void mostrarTexto(String texto) {
+		System.out.println(texto);
+	}
+
+	/**
+	 * Envía directamente a la salida el texto del objeto.
+	 * 
+	 * @return texto correspondiente
+	 */
+	private String mostrarTextoTicket() {
+		String textoTicket;
+		textoTicket = ticket.toString();
+		return textoTicket;
+	}
+
+	private JTextField getTextField() {
+		if (textField == null) {
+			textField = new JTextField();
+			textField.setText(mostrarTextoTicket());
+			textField.setColumns(10);
+		}
+		return textField;
 	}
 }
