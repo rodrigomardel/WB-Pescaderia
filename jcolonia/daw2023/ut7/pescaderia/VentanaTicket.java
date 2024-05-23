@@ -46,11 +46,10 @@ public class VentanaTicket extends JFrame {
 	private JPanel jpanelBordeTurno;
 	private JTextField jtextTurno;
 	private JPanel jpanelInformación;
-	private JTextPane jtextInformación;
 	private JLabel júltimoTicket;
 	private JMenuBar menuBar;
 	private JButton jbotonRestablecer;
-	private JTextField textField;
+	private JTextField jtextoInformación;
 
 	/**
 	 * Launch the application.
@@ -138,6 +137,7 @@ public class VentanaTicket extends JFrame {
 			jbotonSacarTicket = new JButton("Sacar Ticket");
 			jbotonSacarTicket.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					mostrarTextoTicket(ticket.toString());
 					try {
 						ticket.tirarTicket();
 						int ticketActual = ticket.getTicket();
@@ -197,23 +197,9 @@ public class VentanaTicket extends JFrame {
 					new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
 					"Información", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			jpanelInformación.setLayout(new BorderLayout(0, 0));
-			jpanelInformación.add(getJtextInformación(), BorderLayout.WEST);
-			jpanelInformación.add(getTextField(), BorderLayout.CENTER);
+			jpanelInformación.add(getJtextoInformación(), BorderLayout.CENTER);
 		}
 		return jpanelInformación;
-	}
-
-	private JTextPane getJtextInformación() {
-		if (jtextInformación == null) {
-
-			jtextInformación = new JTextPane();
-			jtextInformación.setText("");
-			jtextInformación.setForeground(new Color(51, 102, 255));
-			jtextInformación.setFont(new Font("Tahoma", Font.BOLD, 12));
-			jtextInformación.setEditable(false);
-			jtextInformación.setBorder(new EmptyBorder(0, 0, 0, 0));
-
-		return jtextInformación;
 	}
 
 	private JLabel getJúltimoTicket_1() {
@@ -252,32 +238,23 @@ public class VentanaTicket extends JFrame {
 	}
 
 	/**
-	 * Envía directamente a la salida un texto sin ningún añadifo más que el salto
-	 * de línea final.
-	 * 
-	 * @param texto el texto deseado
-	 */
-	public static void mostrarTexto(String texto) {
-		System.out.println(texto);
-	}
-
-	/**
 	 * Envía directamente a la salida el texto del objeto.
 	 * 
 	 * @return texto correspondiente
 	 */
-	private String mostrarTextoTicket() {
-		String textoTicket;
-		textoTicket = ticket.toString();
-		return textoTicket;
+	private void mostrarTextoTicket(String textoTicket) {
+		JTextField campoInformación;
+		campoInformación = getJtextoInformación();
+
+		campoInformación.setText(textoTicket);
 	}
 
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setText(mostrarTextoTicket());
-			textField.setColumns(10);
+	private JTextField getJtextoInformación() {
+		if (jtextoInformación == null) {
+			jtextoInformación = new JTextField();
+			jtextoInformación.setText("No hay tickets disponibles");
+			jtextoInformación.setColumns(10);
 		}
-		return textField;
+		return jtextoInformación;
 	}
 }
